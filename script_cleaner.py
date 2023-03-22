@@ -18,11 +18,9 @@ def get_chars(script):
     #Creates a string of characters based on the regex requirements
     chars = re.findall(rx, lines)
 
-    #Filters the character list to remove stop words
-    for words in chars:
-        split_words = words.split()
-        if not any([word.lower() in stop_words for word in split_words]):
-            char_output.append(words)
+    #Filters the character list to remove stop words and onomatopoeia
+    char_output = [s for s in chars if not any([s[i] == s[i+1] == s[i+2] for i in range(len(s) - 2)])]
+    char_output = [s for s in char_output if not any([word.lower() in stop_words for word in s.split()])]
             
     char_output = list(set(char_output)) #Remove duplicates
     char_output.sort() #Sort list
