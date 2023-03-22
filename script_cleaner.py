@@ -4,7 +4,8 @@ import re
 script = '/film_script.txt'
 
 def get_chars(script):
-    output = []
+    #Creates an empty character output list
+    char_output = []
     
     #Uses regex and NLTK stopwords to filter superfluous words
     rx = r'\n\s{2,}(?!(?:INT\.?|EXT\.?)\b)([A-Z]{2,}(?:\s[A-Z]+)*)(?: \(V\.?[Oo]\.\))?'
@@ -21,9 +22,29 @@ def get_chars(script):
     for words in chars:
         split_words = words.split()
         if not any([word.lower() in stop_words for word in split_words]):
-            output.append(words)
+            char_output.append(words)
             
-    output = list(set(output)) #Remove duplicates
-    output.sort() #Sort list
+    char_output = list(set(char_output)) #Remove duplicates
+    char_output.sort() #Sort list
     
-    return output
+    return char_output
+
+def get_scene(script):
+    #Creates an empty scene output list
+    scene_output = []
+    
+    #Opens and reads in film script
+    with open(script, 'r') as f:
+        script = f.read()
+        
+        #Creates regex pattern to find scene headings
+        pattern = r'^\s*(?:INT\.|EXT\.|INT\/EXT\.|I\/E\/|EST\.|MONTAGE|INT\:|EXT\:)\s+.*$'
+
+        # Use regular expressions to find all the scene headings
+        scenes = re.findall(pattern, script, flags=re.MULTILINE)
+
+        # Print out each scene and remove excess
+        for scene in scenes:
+            scene_output.append(scene.strip())
+            
+    return scene_output
